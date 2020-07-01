@@ -17,7 +17,6 @@
 package com.linecorp.bot.spring.boot.interceptor;
 
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,10 +62,7 @@ public class LineBotServerInterceptor implements HandlerInterceptor {
             try {
                 final String signatureHeader = request.getHeader(WebhookParser.SIGNATURE_HEADER_NAME);
                 final byte[] payload = StreamUtils.copyToByteArray(request.getInputStream());
-                
-                String s = new String(payload, StandardCharsets.UTF_8);
-                log.info("Received payload: " + s);
-                
+                log.info("Received payload: " + new String(payload, "UTF-8"));
                 final CallbackRequest callbackRequest = webhookParser.handle(signatureHeader, payload);
                 LineBotServerArgumentProcessor.setValue(request, callbackRequest);
                 return true;
